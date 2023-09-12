@@ -1,13 +1,23 @@
-const getTodos = (req, res) => {
+const Todo = require('../models/todo_model');
+
+const getTodos = async(req, res) => {
     res.status(200).json({ message: 'Get todos' })
 }
 
-const setTodo = (req, res) => {
-    if (!req.body.text) {
+const setTodo = async(req, res) => {
+    const { category, title, description } = req.body
+
+    if (!category || !title || !description) {
         res.status(400);
-        throw new Error('Please add text field');
+        throw new Error('Please add all the fields');
     }
-    res.status(200).json({ message: 'Set todo' })
+    const todo = await Todo.create({
+        // text: req.body.text,
+        category: req.body.category,
+        title: req.body.title,
+        description: req.body.description
+    });
+    res.status(200).json(todo)
 }
 
 const updateTodo = (req, res) => {
