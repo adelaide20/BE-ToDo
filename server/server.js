@@ -3,6 +3,11 @@ const port = 3000;
 
 const app = express();
 
+// import local files
+const connectDB = require('./config/db');
+
+connectDB();
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
