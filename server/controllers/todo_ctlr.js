@@ -1,9 +1,6 @@
 const Todo = require('../models/todo_model');
 
-const getTodos = async(req, res) => {
-    res.status(200).json({ message: 'Get todos' })
-}
-
+// add an item to the todo's db
 const setTodo = async(req, res) => {
     const { category, title, description } = req.body
 
@@ -20,12 +17,34 @@ const setTodo = async(req, res) => {
     res.status(200).json(todo)
 }
 
-const updateTodo = (req, res) => {
-    res.status(200).json({ message: `Update todo ${req.params.id}` })
+// get all items from the todo's db
+const getTodos = async(req, res) => {
+    const todos = await Todo.find();
+    res.status(200).json(todos)
 }
 
+// update an item 
+const updateTodo = async(req, res) => {
+    const todo = await Todo.findById(req.params.id);
+
+    if (!todo) {
+        res.status(400);
+        throw new Error(`Todo with id ${ req.params.id }
+                not found`);
+    }
+
+    const updatedTodo = await Todo.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+    });
+
+    res.status(200).json(updatedTodo);
+}
+
+// delete an item
 const deleteTodo = (req, res) => {
-    res.status(200).json({ message: `Delete todo ${req.params.id}` })
+    res.status(200).json({ message: `
+                    Delete todo $ { req.params.id }
+                    ` })
 }
 
 module.exports = {
