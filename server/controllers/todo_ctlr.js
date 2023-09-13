@@ -29,7 +29,7 @@ const updateTodo = async(req, res) => {
 
     if (!todo) {
         res.status(400);
-        throw new Error(`Todo with id ${ req.params.id }
+        throw new Error(`Item with id ${ req.params.id }
                 not found`);
     }
 
@@ -41,10 +41,18 @@ const updateTodo = async(req, res) => {
 }
 
 // delete an item
-const deleteTodo = (req, res) => {
-    res.status(200).json({ message: `
-                    Delete todo $ { req.params.id }
-                    ` })
+const deleteTodo = async(req, res) => {
+    const todo = await Todo.findById(req.params.id);
+
+    if (!todo) {
+        res.status(400);
+        throw new Error('Item not found');
+    }
+
+    await todo.remove();
+
+
+    res.status(200).json({ id: req.params.id });
 }
 
 module.exports = {
